@@ -7,7 +7,7 @@ name: Build exporter artifacts
 on:
   push:
     tags:
-      - 'v*'
+      - v*
 
 permissions:
   id-token: write
