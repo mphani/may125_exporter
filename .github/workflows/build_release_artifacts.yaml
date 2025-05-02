@@ -45,6 +45,17 @@ jobs:
       - name: Authenticate Snyk
         run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+           go-version: 1.20.2
+  
+      - name: go mod tidy
+        run: |
+            dpkg-architecture -q DEB_BUILD_ARCH
+            (git describe --tags --always --abbrev=0 | cut -c 1-)
+            go mod tidy
+              
       - name: Install FPM deps
         run: |
           sudo apt-get update
@@ -66,6 +77,7 @@ jobs:
           cd pkg/target
           gzip aerospike-prometheus-exporter*.tar
           for f in *.tar.gz; do
+            echo "Moving tar-gzipped filename - "$f
             mv "$f" "${f%.tar.gz}.tgz"
           done
 
