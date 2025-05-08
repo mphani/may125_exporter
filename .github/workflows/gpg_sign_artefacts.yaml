@@ -98,7 +98,7 @@ jobs:
           for file in $files; do
                echo "Checking gpg signing of DEB -- $file"
                # Sign the package
-               dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase '$GPG_PASSPHRASE'" $file
+               dpkg-sig --sign builder --gpg-options "--armour --batch --pinentry-mode loopback --passphrase '$GPG_PASSPHRASE'" $file
           done  
           
           #dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" tests/*.deb
@@ -107,7 +107,7 @@ jobs:
           echo 
           echo listing all files
           echo
-          ls -lrt
+          ls -lrt artefacts/*
           
       - name: Upload files to release-tag
         env:
