@@ -1,5 +1,6 @@
 name: GPG sign rpm
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
      inputs:
         release_tag_info:
           description: enter release tag number
