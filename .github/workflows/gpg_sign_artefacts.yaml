@@ -43,7 +43,7 @@ jobs:
           files=$(find ./rpms -type f -name "aerospike-prome*.rpm" -printf "$(realpath -s %p) ")
           for file in $files; do
                echo "gpg signing rpm -- $file"
-               gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" $file
+               gpg --armour --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" $file
                # Sign the package
                # echo adding sign to rpm -- $file
                # rpm --addsign $file
