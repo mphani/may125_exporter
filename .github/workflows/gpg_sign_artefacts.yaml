@@ -40,7 +40,12 @@ jobs:
           # sign a gpg
           echo
           echo signing-rpms in rpms folder
-          gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/*.rpm
+          files=$(find ./rpms -type f -name "aerospike-prome*.rpm" -printf "$(realpath -s %p) ")
+          for file in $files; do
+               echo "gpg signing file $file"
+               gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/$file
+          done            
+          # gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/*.rpm
           echo
           echo list files in rpms folder
           ls -lrt rpms/*
