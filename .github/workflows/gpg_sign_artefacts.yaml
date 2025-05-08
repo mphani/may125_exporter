@@ -74,4 +74,23 @@ jobs:
                # Verify the signature
                rpm --checksig $file
           done            
+      - name: Upload files to release-tag
+        env:
+          GPG_TTY: /dev/null
+          HOME: /home/runner
+          GNUPGHOME: /home/runner/.gnupg
+        run: |
+          TAG_NAME=${{ github.event.inputs.release_tag_info }}   
 
+           # List asset names, filter for .sha256 or .asc, then delete each
+          for file in $(gh release view "$TAG_NAME" --json assets --jq '.assets[].name' \
+                            | grep -E '\.sha256$|\.asc$'); do
+            echo "removing file $file"
+            gh release delete-asset "$TAG_NAME" "$file" -y
+          done
+
+          files=$(find ./rpms -type f -name "aerospike-prome*.sha256*" -printf "$(realpath -s %p) ")
+          for file in $files; do
+             echo "uploading file $file"
+             gh release upload "$TAG_NAME" "$file"             
+          done 
