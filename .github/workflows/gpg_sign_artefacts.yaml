@@ -78,7 +78,32 @@ jobs:
                echo "Checking gpg signing of rpm -- $file"
                # Verify the signature
                rpm --checksig $file
-          done            
+          done  
+      - name: GPG sign deb # gpg sign and verify deb packages
+        env:
+          GPG_TTY: /dev/null
+          HOME: /home/runner
+          GNUPGHOME: /home/runner/.gnupg
+        run: |
+          # Ensure environment variables are exported
+          export HOME="${HOME}"
+          export GNUPGHOME="${GNUPGHOME}"
+
+          files=$(find ./rpms -type f -name "aerospike-prome*.deb" -printf "$(realpath -s %p) ")
+          for file in $files; do
+               echo "Checking gpg signing of DEB -- $file"
+               # Sign the package
+               dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" $file
+          done  
+          
+          #dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" tests/*.deb
+          # Verify the signature
+          dpkg-sig --verify rpms/*.deb
+          echo 
+          echo listing all files
+          echo
+          ls -lrt
+          
       - name: Upload files to release-tag
         env:
           GH_TOKEN: ${{ github.token }}              
