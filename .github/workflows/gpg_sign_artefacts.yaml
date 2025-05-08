@@ -20,6 +20,8 @@ jobs:
           gpg-key-pass: ${{ secrets.GPG_PASS }}
           gpg-key-name: "phanitest"
       - name: Download RPM from Release “${{ github.event.inputs.tag }}”
+        env:
+          GH_TOKEN: ${{ github.token }}      
         run: |
           mkdir rpms
           gh release download ${{ github.event.inputs.release_tag_info }} \
@@ -33,6 +35,7 @@ jobs:
         env:
           GPG_TTY: no-tty
           GPG_PASSPHRASE: ${{ secrets.GPG_PASS }}
+          GH_TOKEN: ${{ github.token }}      
         run: |
           # sign a gpg
           gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" my.rpm
