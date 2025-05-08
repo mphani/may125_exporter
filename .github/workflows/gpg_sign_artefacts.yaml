@@ -97,13 +97,15 @@ jobs:
           files=$(find ./artefacts -type f -name "aerospike-prome*.deb" -printf "$(realpath -s %p) ")
           for file in $files; do
                echo "Checking gpg signing of DEB -- $file"
+               sha256sum $file > $file.sha256
+               gpg --armour --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" $file.sha256               
                # Sign the package
-               dpkg-sig --sign builder --gpg-options "--armour --batch --pinentry-mode loopback --passphrase '$GPG_PASSPHRASE'" $file
+               #dpkg-sig --sign builder --gpg-options "--armour --batch --pinentry-mode loopback --passphrase '$GPG_PASSPHRASE'" $file.sha256
           done  
           
           #dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" tests/*.deb
           # Verify the signature
-          dpkg-sig --verify artefacts/*.deb
+          #dpkg-sig --verify artefacts/*.deb
           echo 
           echo listing all files
           echo
