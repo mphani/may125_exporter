@@ -38,4 +38,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}      
         run: |
           # sign a gpg
-          gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" my.rpm
+          echo
+          echo signing-rpms in rpms folder
+          gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/*.rpm
+          echo
+          echo list files in rpms folder
+          ls -lrt rpms/*
