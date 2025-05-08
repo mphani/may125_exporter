@@ -98,7 +98,7 @@ jobs:
           for file in $files; do
                echo "Checking gpg signing of DEB -- $file"
                # Sign the package
-               dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" $file
+               dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase '$GPG_PASSPHRASE'" $file
           done  
           
           #dpkg-sig --sign builder --gpg-options "--batch --pinentry-mode loopback --passphrase-file $GNUPGHOME/passphrase" tests/*.deb
