@@ -76,9 +76,7 @@ jobs:
           done            
       - name: Upload files to release-tag
         env:
-          GPG_TTY: /dev/null
-          HOME: /home/runner
-          GNUPGHOME: /home/runner/.gnupg
+          GH_TOKEN: ${{ github.token }}              
         run: |
           TAG_NAME=${{ github.event.inputs.release_tag_info }}   
 
