@@ -44,3 +44,5 @@ jobs:
           echo
           echo list files in rpms folder
           ls -lrt rpms/*
+          echo listing other files
+          ls -lrt
