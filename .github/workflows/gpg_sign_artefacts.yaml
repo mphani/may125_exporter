@@ -45,8 +45,8 @@ jobs:
                echo "gpg signing rpm -- $file"
                gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" $file
                # Sign the package
-               echo adding sign to rpm -- $file
-               rpm --addsign $file
+               # echo adding sign to rpm -- $file
+               # rpm --addsign $file
           done            
           # gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/*.rpm
           echo
