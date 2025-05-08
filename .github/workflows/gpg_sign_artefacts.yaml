@@ -42,8 +42,11 @@ jobs:
           echo signing-rpms in rpms folder
           files=$(find ./rpms -type f -name "aerospike-prome*.rpm" -printf "$(realpath -s %p) ")
           for file in $files; do
-               echo "gpg signing file $file"
+               echo "gpg signing rpm -- $file"
                gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" $file
+               # Sign the package
+               echo adding sign to rpm -- $file
+               rpm --addsign $file
           done            
           # gpg --detach-sign --no-tty --batch --yes --passphrase "$GPG_PASSPHRASE" rpms/*.rpm
           echo
@@ -51,3 +54,23 @@ jobs:
           ls -lrt rpms/*
           echo listing other files
           ls -lrt
+      - name: Sign and check rpm # gpg sign and verify rpm packages
+        env:
+          GPG_TTY: /dev/null
+          HOME: /home/runner
+          GNUPGHOME: /home/runner/.gnupg
+        run: |
+          # Ensure environment variables are exported
+          export HOME="${HOME}"
+          export GNUPGHOME="${GNUPGHOME}"
+
+          # Create symlink for gpg2 (required for rpm signing)
+          sudo ln -sf $(which gpg) /usr/bin/gpg2
+
+          files=$(find ./rpms -type f -name "aerospike-prome*.rpm" -printf "$(realpath -s %p) ")
+          for file in $files; do
+               echo "Checking gpg signing of rpm -- $file"
+               # Verify the signature
+               rpm --checksig $file
+          done            
+
